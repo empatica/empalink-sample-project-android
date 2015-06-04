@@ -1,0 +1,158 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context=".MainActivity">
+
+    <TextView
+        android:id="@+id/status"
+        android:layout_alignParentStart="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/deviceName"
+        android:layout_below="@id/status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <RelativeLayout
+        android:layout_marginTop="20dp"
+        android:visibility="gone"
+        android:id="@+id/dataArea"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/deviceName">
+
+        <TextView
+            android:id="@+id/accel_label"
+            android:layout_alignParentStart="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/accel" />
+
+        <LinearLayout
+            android:id="@+id/accel_area"
+            android:layout_below="@id/accel_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/accel_x" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:width="50dp"
+                android:id="@+id/accel_x"
+                android:text="@string/emptyText"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/accel_y" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:width="50dp"
+                android:id="@+id/accel_y"
+                android:text="@string/emptyText"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/accel_z" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:width="50dp"
+                android:id="@+id/accel_z"
+                android:text="@string/emptyText"/>
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/bvp_label"
+            android:layout_marginTop="10dp"
+            android:layout_below="@id/accel_area"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/bvp_label" />
+
+        <TextView
+            android:layout_below="@id/bvp_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/bvp"
+            android:text="@string/emptyText"/>
+
+        <TextView
+            android:id="@+id/eda_label"
+            android:layout_marginTop="10dp"
+            android:layout_below="@id/bvp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/eda_label" />
+
+        <TextView
+            android:layout_below="@id/eda_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/eda"
+            android:text="@string/emptyText"/>
+
+        <TextView
+            android:id="@+id/ibi_label"
+            android:layout_marginTop="10dp"
+            android:layout_below="@id/eda"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/ibi_label" />
+
+        <TextView
+            android:layout_below="@id/ibi_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/ibi"
+            android:text="@string/emptyText"/>
+
+        <TextView
+            android:id="@+id/temp_label"
+            android:layout_marginTop="10dp"
+            android:layout_below="@id/ibi"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/temp_label" />
+
+        <TextView
+            android:layout_below="@id/temp_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/temperature"
+            android:text="@string/emptyText"/>
+
+        <TextView
+            android:id="@+id/battery_label"
+            android:layout_marginTop="10dp"
+            android:layout_below="@id/temperature"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/battery_label" />
+
+        <TextView
+            android:layout_below="@id/battery_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/battery"
+            android:text="@string/emptyText"/>
+
+    </RelativeLayout>
+
+</RelativeLayout>
