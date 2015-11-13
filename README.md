@@ -21,7 +21,7 @@ The sample application implemented in the project has very simple functionalitie
 - Build and run the project.
 - If a device is in range and its light is blinking green, but the app doesn't connect, please check that the discovered device can be used with your API key. If the `allowed` parameter is always false, the device is not linked to your API key. Please check your [Developer Area][1].
 
-If you need any additional information about the Empatica API for Android, please check the [official documentation][1].
+If you need any additional information about the Empatica API for Android, please check the [official documentation][2].
 
 [1]: https://www.empatica.com/connect/developer.php
-[2]: https://www.empatica.com/docs/android.php
+[2]: https://developer.empatica.com
