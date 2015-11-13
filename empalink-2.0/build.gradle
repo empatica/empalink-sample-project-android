@@ -1,2 +1,0 @@
-configurations.create("default")
-artifacts.add("default", file('empalink-2.0.aar'))
