@@ -1,11 +1,20 @@
 package com.empatica.sample;
 
+import android.Manifest;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.Settings;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.RelativeLayout;
@@ -24,11 +33,12 @@ import com.empatica.empalink.delegate.EmpaStatusDelegate;
 public class MainActivity extends AppCompatActivity implements EmpaDataDelegate, EmpaStatusDelegate {
 
     private static final int REQUEST_ENABLE_BT = 1;
+    private static final int REQUEST_PERMISSION_ACCESS_COARSE_LOCATION = 1;
     private static final long STREAMING_TIME = 10000; // Stops streaming 10 seconds after connection
 
     private static final String EMPATICA_API_KEY = ""; // TODO insert your API Key here
 
-    private EmpaDeviceManager deviceManager;
+    private EmpaDeviceManager deviceManager = null;
 
     private TextView accel_xLabel;
     private TextView accel_yLabel;
@@ -60,22 +70,76 @@ public class MainActivity extends AppCompatActivity implements EmpaDataDelegate,
         batteryLabel = (TextView) findViewById(R.id.battery);
         deviceNameLabel = (TextView) findViewById(R.id.deviceName);
 
-        // Create a new EmpaDeviceManager. MainActivity is both its data and status delegate.
-        deviceManager = new EmpaDeviceManager(getApplicationContext(), this, this);
-        // Initialize the Device Manager using your API key. You need to have Internet access at this point.
-        deviceManager.authenticateWithAPIKey(EMPATICA_API_KEY);
+        initEmpaticaDeviceManager();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_PERMISSION_ACCESS_COARSE_LOCATION:
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // Permission was granted, yay!
+                    initEmpaticaDeviceManager();
+                } else {
+                    // Permission denied, boo!
+                    final boolean needRationale = ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_COARSE_LOCATION);
+                    new AlertDialog.Builder(this)
+                            .setTitle("Permission required")
+                            .setMessage("Without this permission bluetooth low energy devices cannot be found, allow it in order to connect to the device.")
+                            .setPositiveButton("Retry", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    // try again
+                                    if (needRationale) {
+                                        // the "never ask again" flash is not set, try again with permission request
+                                        initEmpaticaDeviceManager();
+                                    } else {
+                                        // the "never ask again" flag is set so the permission requests is disabled, try open app settings to enable the permission
+                                        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                                        Uri uri = Uri.fromParts("package", getPackageName(), null);
+                                        intent.setData(uri);
+                                        startActivity(intent);
+                                    }
+                                }
+                            })
+                            .setNegativeButton("Exit application", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    // without permission exit is the only way
+                                    finish();
+                                }
+                            })
+                            .show();
+                }
+                break;
+        }
+    }
+
+    private void initEmpaticaDeviceManager() {
+        // Android 6 (API level 23) now require ACCESS_COARSE_LOCATION permission to use BLE
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[] { Manifest.permission.ACCESS_COARSE_LOCATION }, REQUEST_PERMISSION_ACCESS_COARSE_LOCATION);
+        } else {
+            // Create a new EmpaDeviceManager. MainActivity is both its data and status delegate.
+            deviceManager = new EmpaDeviceManager(getApplicationContext(), this, this);
+            // Initialize the Device Manager using your API key. You need to have Internet access at this point.
+            deviceManager.authenticateWithAPIKey(EMPATICA_API_KEY);
+        }
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        deviceManager.stopScanning();
+        if (deviceManager != null) {
+            deviceManager.stopScanning();
+        }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        deviceManager.cleanUp();
+        if (deviceManager != null) {
+            deviceManager.cleanUp();
+        }
     }
 
     @Override
