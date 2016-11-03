@@ -24,4 +24,4 @@ The sample application implemented in the project has very simple functionalitie
 If you need any additional information about the Empatica API for Android, please check the [official documentation][2].
 
 [1]: https://www.empatica.com/connect/developer.php
-[2]: https://developer.empatica.com
+[2]: http://developer.empatica.com
