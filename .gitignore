@@ -42,3 +42,6 @@ proguard/
 
 # EmpaLink lib
 empalink*.aar
+
+gradlew*
+gradle/*

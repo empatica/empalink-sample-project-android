@@ -1,11 +1,16 @@
 package com.empatica.sample;
 
+import android.Manifest;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.RelativeLayout;
@@ -24,6 +29,7 @@ import com.empatica.empalink.delegate.EmpaStatusDelegate;
 public class MainActivity extends AppCompatActivity implements EmpaDataDelegate, EmpaStatusDelegate {
 
     private static final int REQUEST_ENABLE_BT = 1;
+    private static final int REQUEST_LOCATION = 2;
     private static final long STREAMING_TIME = 10000; // Stops streaming 10 seconds after connection
 
     private static final String EMPATICA_API_KEY = ""; // TODO insert your API Key here
@@ -64,6 +70,23 @@ public class MainActivity extends AppCompatActivity implements EmpaDataDelegate,
         deviceManager = new EmpaDeviceManager(getApplicationContext(), this, this);
         // Initialize the Device Manager using your API key. You need to have Internet access at this point.
         deviceManager.authenticateWithAPIKey(EMPATICA_API_KEY);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case REQUEST_LOCATION:
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // permission was granted, yay!
+                    deviceManager.startScanning();
+                } else {
+                    // permission denied, boo!
+                    deviceManager.stopScanning();
+                }
+                break;
+        }
     }
 
     @Override
@@ -128,8 +151,12 @@ public class MainActivity extends AppCompatActivity implements EmpaDataDelegate,
         if (status == EmpaStatus.READY) {
             updateLabel(statusLabel, status.name() + " - Turn on your device");
             // Start scanning
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, REQUEST_LOCATION);
+                return;
+            }
             deviceManager.startScanning();
-        // The device manager has established a connection
+            // The device manager has established a connection
         } else if (status == EmpaStatus.CONNECTED) {
             // Stop streaming after STREAMING_TIME
             runOnUiThread(new Runnable() {
@@ -145,7 +172,7 @@ public class MainActivity extends AppCompatActivity implements EmpaDataDelegate,
                     }, STREAMING_TIME);
                 }
             });
-        // The device manager disconnected from a device
+            // The device manager disconnected from a device
         } else if (status == EmpaStatus.DISCONNECTED) {
             updateLabel(deviceNameLabel, "");
         }
