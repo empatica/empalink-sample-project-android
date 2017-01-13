@@ -1,1 +1,1 @@
-include ':app', ':empalink-2.0'
+include ':app'

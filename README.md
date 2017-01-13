@@ -17,7 +17,7 @@ The sample application implemented in the project has very simple functionalitie
 - Make sure you have a valid API key. You can request one for your Empatica Connect account from our [Developer Area][1].
 - Edit `MainActivity.java` and assign your API key to the `EMPATICA_API_KEY` constant .
 - Download the Android SDK from our [Developer Area][1].
-- Unzip the archive you've downloaded and copy the `.aar` file you'll find inside into the `empalink-2.0` folder contained in the sample project.
+- Unzip the archive you've downloaded and copy the `.aar` file you'll find inside into the `libs` folder contained in the sample project.
 - Build and run the project.
 - If a device is in range and its light is blinking green, but the app doesn't connect, please check that the discovered device can be used with your API key. If the `allowed` parameter is always false, the device is not linked to your API key. Please check your [Developer Area][1].
 

@@ -22,13 +22,17 @@ gen/
 build/
 
 # IntelliJ Idea
-/.idea/workspace.xml
-/.idea/tasks.xml
-/.idea/dataSources.ids
-/.idea/datasources.xml
+.idea/
+*.iml
 
-# OSX stuff
+# OS-specific files
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
 
 # Proguard folder
 proguard/
@@ -38,3 +42,6 @@ proguard/
 
 # EmpaLink lib
 empalink*.aar
+
+gradlew*
+gradle/*
