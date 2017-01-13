@@ -16,6 +16,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -122,6 +123,20 @@ public class MainActivity extends AppCompatActivity implements EmpaDataDelegate,
         } else {
             // Create a new EmpaDeviceManager. MainActivity is both its data and status delegate.
             deviceManager = new EmpaDeviceManager(getApplicationContext(), this, this);
+
+            if (TextUtils.isEmpty(EMPATICA_API_KEY)) {
+                new AlertDialog.Builder(this)
+                        .setTitle("Warning")
+                        .setMessage("Please insert your API KEY")
+                        .setNegativeButton("Close", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                // without permission exit is the only way
+                                finish();
+                            }
+                        })
+                        .show();
+                return;
+            }
             // Initialize the Device Manager using your API key. You need to have Internet access at this point.
             deviceManager.authenticateWithAPIKey(EMPATICA_API_KEY);
         }
