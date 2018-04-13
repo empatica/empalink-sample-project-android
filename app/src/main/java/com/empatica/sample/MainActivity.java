@@ -24,6 +24,7 @@ import android.widget.Toast;
 
 import com.empatica.empalink.ConnectionNotAllowedException;
 import com.empatica.empalink.EmpaDeviceManager;
+import com.empatica.empalink.EmpaticaDevice;
 import com.empatica.empalink.config.EmpaSensorStatus;
 import com.empatica.empalink.config.EmpaSensorType;
 import com.empatica.empalink.config.EmpaStatus;
@@ -159,7 +160,7 @@ public class MainActivity extends AppCompatActivity implements EmpaDataDelegate,
     }
 
     @Override
-    public void didDiscoverDevice(BluetoothDevice bluetoothDevice, String deviceName, int rssi, boolean allowed) {
+    public void didDiscoverDevice(EmpaticaDevice bluetoothDevice, String deviceName, int rssi, boolean allowed) {
         // Check if the discovered device can be used with your API key. If allowed is always false,
         // the device is not linked with your API key. Please check your developer area at
         // https://www.empatica.com/connect/developer.php
@@ -195,7 +196,7 @@ public class MainActivity extends AppCompatActivity implements EmpaDataDelegate,
     }
 
     @Override
-    public void didUpdateSensorStatus(EmpaSensorStatus status, EmpaSensorType type) {
+    public void didUpdateSensorStatus(@EmpaSensorStatus int status, EmpaSensorType type) {
         // No need to implement this right now
     }
 
@@ -271,5 +272,20 @@ public class MainActivity extends AppCompatActivity implements EmpaDataDelegate,
                 label.setText(text);
             }
         });
+    }
+
+    @Override
+    public void didReceiveTag(double timestamp) {
+
+    }
+
+    @Override
+    public void didEstablishConnection() {
+
+    }
+
+    @Override
+    public void didUpdateOnWristStatus(@EmpaSensorStatus int status) {
+
     }
 }
