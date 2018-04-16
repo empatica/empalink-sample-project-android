@@ -18,6 +18,8 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -35,43 +37,82 @@ import com.empatica.empalink.delegate.EmpaStatusDelegate;
 public class MainActivity extends AppCompatActivity implements EmpaDataDelegate, EmpaStatusDelegate {
 
     private static final int REQUEST_ENABLE_BT = 1;
+
     private static final int REQUEST_PERMISSION_ACCESS_COARSE_LOCATION = 1;
 
-    private static final long STREAMING_TIME = 10000; // Stops streaming 10 seconds after connection
 
-    private static final String EMPATICA_API_KEY = ""; // TODO insert your API Key here
+    private static final String EMPATICA_API_KEY = "9622b12e3a9548639afa3c91aa580563"; // TODO insert your API Key here
+
 
     private EmpaDeviceManager deviceManager = null;
 
     private TextView accel_xLabel;
+
     private TextView accel_yLabel;
+
     private TextView accel_zLabel;
+
     private TextView bvpLabel;
+
     private TextView edaLabel;
+
     private TextView ibiLabel;
+
     private TextView temperatureLabel;
+
     private TextView batteryLabel;
+
     private TextView statusLabel;
+
     private TextView deviceNameLabel;
-    private RelativeLayout dataCnt;
+
+    private LinearLayout dataCnt;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
 
         // Initialize vars that reference UI components
         statusLabel = (TextView) findViewById(R.id.status);
-        dataCnt = (RelativeLayout) findViewById(R.id.dataArea);
+
+        dataCnt = (LinearLayout) findViewById(R.id.dataArea);
+
         accel_xLabel = (TextView) findViewById(R.id.accel_x);
+
         accel_yLabel = (TextView) findViewById(R.id.accel_y);
+
         accel_zLabel = (TextView) findViewById(R.id.accel_z);
+
         bvpLabel = (TextView) findViewById(R.id.bvp);
+
         edaLabel = (TextView) findViewById(R.id.eda);
+
         ibiLabel = (TextView) findViewById(R.id.ibi);
+
         temperatureLabel = (TextView) findViewById(R.id.temperature);
+
         batteryLabel = (TextView) findViewById(R.id.battery);
+
         deviceNameLabel = (TextView) findViewById(R.id.deviceName);
+
+
+        final Button disconnectButton = findViewById(R.id.disconnectButton);
+
+        disconnectButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+                if (deviceManager != null) {
+
+                    deviceManager.disconnect();
+                }
+            }
+        });
 
         initEmpaticaDeviceManager();
     }
@@ -197,7 +238,8 @@ public class MainActivity extends AppCompatActivity implements EmpaDataDelegate,
 
     @Override
     public void didUpdateSensorStatus(@EmpaSensorStatus int status, EmpaSensorType type) {
-        // No need to implement this right now
+
+        didUpdateOnWristStatus(status);
     }
 
     @Override
@@ -211,24 +253,18 @@ public class MainActivity extends AppCompatActivity implements EmpaDataDelegate,
             // Start scanning
             deviceManager.startScanning();
             // The device manager has established a connection
+
+            hide();
+
         } else if (status == EmpaStatus.CONNECTED) {
-            // Stop streaming after STREAMING_TIME
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    dataCnt.setVisibility(View.VISIBLE);
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            // Disconnect device
-                            deviceManager.disconnect();
-                        }
-                    }, STREAMING_TIME);
-                }
-            });
+
+            show();
             // The device manager disconnected from a device
         } else if (status == EmpaStatus.DISCONNECTED) {
+
             updateLabel(deviceNameLabel, "");
+
+            hide();
         }
     }
 
@@ -282,10 +318,50 @@ public class MainActivity extends AppCompatActivity implements EmpaDataDelegate,
     @Override
     public void didEstablishConnection() {
 
+        show();
     }
 
     @Override
-    public void didUpdateOnWristStatus(@EmpaSensorStatus int status) {
+    public void didUpdateOnWristStatus(@EmpaSensorStatus final int status) {
 
+        runOnUiThread(new Runnable() {
+
+            @Override
+            public void run() {
+
+                if (status == EmpaSensorStatus.ON_WRIST) {
+
+                    ((TextView) findViewById(R.id.wrist_status_label)).setText("ON WRIST");
+                }
+                else {
+
+                    ((TextView) findViewById(R.id.wrist_status_label)).setText("NOT ON WRIST");
+                }
+            }
+        });
+    }
+
+    void show() {
+
+        runOnUiThread(new Runnable() {
+
+            @Override
+            public void run() {
+
+                dataCnt.setVisibility(View.VISIBLE);
+            }
+        });
+    }
+
+    void hide() {
+
+        runOnUiThread(new Runnable() {
+
+            @Override
+            public void run() {
+
+                dataCnt.setVisibility(View.INVISIBLE);
+            }
+        });
     }
 }

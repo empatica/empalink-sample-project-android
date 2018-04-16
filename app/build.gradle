@@ -18,10 +18,14 @@ android {
     }
     productFlavors {
     }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_6
+        targetCompatibility JavaVersion.VERSION_1_6
+    }
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'com.android.support:appcompat-v7:27.1.1'
     implementation 'com.empatica.empalink:empalink:2.2@aar'
     implementation 'com.squareup.okhttp:okhttp:2.5.0'
