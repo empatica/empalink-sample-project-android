@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This sample project gives you the boilerplate code you need to connect to an Empatica E4 (or E3) device and start streaming data.
+This sample project gives you the boilerplate code you need to connect to an Empatica E4 device and start streaming data.
 
 The sample application implemented in the project has very simple functionalities:
 
