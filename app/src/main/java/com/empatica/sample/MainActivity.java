@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity implements EmpaDataDelegate,
     private static final int REQUEST_PERMISSION_ACCESS_COARSE_LOCATION = 1;
 
 
-    private static final String EMPATICA_API_KEY = "9622b12e3a9548639afa3c91aa580563"; // TODO insert your API Key here
+    private static final String EMPATICA_API_KEY = ""; // TODO insert your API Key here
 
 
     private EmpaDeviceManager deviceManager = null;
