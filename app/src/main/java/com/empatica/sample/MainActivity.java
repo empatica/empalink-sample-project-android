@@ -163,8 +163,6 @@ public class MainActivity extends AppCompatActivity implements EmpaDataDelegate,
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[] { Manifest.permission.ACCESS_COARSE_LOCATION }, REQUEST_PERMISSION_ACCESS_COARSE_LOCATION);
         } else {
-            // Create a new EmpaDeviceManager. MainActivity is both its data and status delegate.
-            deviceManager = new EmpaDeviceManager(getApplicationContext(), this, this);
 
             if (TextUtils.isEmpty(EMPATICA_API_KEY)) {
                 new AlertDialog.Builder(this)
@@ -179,6 +177,10 @@ public class MainActivity extends AppCompatActivity implements EmpaDataDelegate,
                         .show();
                 return;
             }
+
+            // Create a new EmpaDeviceManager. MainActivity is both its data and status delegate.
+            deviceManager = new EmpaDeviceManager(getApplicationContext(), this, this);
+
             // Initialize the Device Manager using your API key. You need to have Internet access at this point.
             deviceManager.authenticateWithAPIKey(EMPATICA_API_KEY);
         }
